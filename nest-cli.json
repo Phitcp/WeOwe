@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/we-owe/src",
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "webpack": true,
+    "tsConfigPath": "apps/we-owe/tsconfig.app.json",
+    "assets": ["libs/**/*.proto"],
+    "watchAssets": true
+  },
+  "monorepo": true,
+  "root": "apps/we-owe",
+  "projects": {
+    "api-gateway": {
+      "type": "application",
+      "root": "apps/api-gateway",
+      "entryFile": "main",
+      "sourceRoot": "apps/api-gateway/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/api-gateway/tsconfig.app.json",
+        "assets": ["../../libs/**/*.proto"]
+      }
+    },
+    "util": {
+      "type": "library",
+      "root": "libs/util",
+      "entryFile": "index",
+      "sourceRoot": "libs/util/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/util/tsconfig.lib.json"
+      }
+    },
+    "we-owe": {
+      "type": "application",
+      "root": "apps/we-owe",
+      "entryFile": "main",
+      "sourceRoot": "apps/we-owe/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/we-owe/tsconfig.app.json",
+        "assets": ["../../libs/**/*.proto"]
+      }
+    }
+  }
+}

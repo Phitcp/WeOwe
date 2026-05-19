@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package grpc.health.v1;
+
+message HealthCheckRequest {
+  string service = 1;
+}
+
+message HealthCheckResponse {
+  string status = 1;
+  string timestamp = 2;
+  double uptimeSeconds = 3;
+  double cpuPercent = 4;
+  double memoryPercent = 5;
+}
+
+service Health {
+  rpc Check(HealthCheckRequest) returns (HealthCheckResponse);
+}
