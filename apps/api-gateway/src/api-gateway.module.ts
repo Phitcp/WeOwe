@@ -4,6 +4,7 @@ import { ApiGatewayService } from './api-gateway.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { buildProtoOptions } from 'libs/proto/utils';
 import { UtilModule } from '@app/util';
+import { AppConfigModule } from './config/config.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { UtilModule } from '@app/util';
         },
       },
     ]),
+    AppConfigModule
   ],
   controllers: [ApiGatewayController],
   providers: [

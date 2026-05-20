@@ -21,13 +21,17 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
+    "strictPropertyInitialization":false,
     "paths": {
       "@app/util": [
         "libs/util/src"
       ],
       "@app/util/*": [
         "libs/util/src/*"
-      ]
+      ],
+      "@apps/*": [
+        "apps/*"
+      ],
     }
   }
 }
