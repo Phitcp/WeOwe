@@ -2,8 +2,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
 export enum GLOBAL_ROLE_ENUM {
-  'Admin',
-  'User',
+  Admin = 'admin',
+  User = 'user',
 }
 
 export type UserDocument = HydratedDocument<User>;
@@ -14,20 +14,16 @@ export class User {
     required: true,
   })
   email: string;
-
-  @Prop(
-    {
-        required: true,
-    }
-  )
+  
+  @Prop({
+    required: true,
+  })
   passwordHash: string;
 
-  @Prop(
-    {
-        required: true,
-        default: GLOBAL_ROLE_ENUM.User
-    }
-  )
+  @Prop({
+    required: true,
+    default: GLOBAL_ROLE_ENUM.User,
+  })
   globalRole: GLOBAL_ROLE_ENUM;
 }
 

@@ -1,37 +1,29 @@
-import { Module } from '@nestjs/common';
-import { ApiGatewayController, ApiGatewayControllerBaseDependencies } from './api-gateway.controller';
+import { Logger, MiddlewareConsumer, Module } from '@nestjs/common';
+import {
+  ApiGatewayController,
+  ApiGatewayControllerBaseDependencies,
+} from './api-gateway.controller';
 import { ApiGatewayService } from './api-gateway.service';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import { buildProtoOptions } from 'libs/proto/utils';
 import { UtilModule } from '@app/util';
 import { AppConfigModule } from './config/config.module';
+import { AuthModule } from './auth/auth.module';
+import { LoggerMiddleware } from 'libs/middlewares/request-log.middleware';
+import { WeOweGrpcClientModule } from './grpc-client.module';
+import { OperationContextService } from 'libs/decorators/operation-context.service';
 
 @Module({
-  imports: [
-    UtilModule,
-    ClientsModule.registerAsync([
-      {
-        name: 'WE_OWE_SERVICE',
-        useFactory: () => {
-          const proto = buildProtoOptions();
-          return {
-            transport: Transport.GRPC,
-            options: {
-              url: `localhost:${process.env.WE_OWE_PORT ?? 3001}`,
-              package: proto.package,
-              protoPath: proto.protoPath,
-            },
-          };
-        },
-      },
-    ]),
-    AppConfigModule
-  ],
+  imports: [UtilModule, WeOweGrpcClientModule, AppConfigModule, AuthModule],
   controllers: [ApiGatewayController],
   providers: [
     ApiGatewayService,
-    ApiGatewayControllerBaseDependencies
+    ApiGatewayControllerBaseDependencies,
+    Logger,
+    OperationContextService,
   ],
   exports: [ApiGatewayService],
 })
-export class ApiGatewayModule {}
+export class ApiGatewayModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}

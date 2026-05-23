@@ -25,4 +25,39 @@ export class UtilService {
       ? toPercent((memory.rss / totalSystemMemoryBytes) * 100)
       : 0;
   }
+
+  addDaysToDate(date: Date, days: number): Date {
+    const result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+  }
+
+  convertTimerToMs(time: string | number): number {
+    if (typeof time === 'number') {
+      return time;
+    }
+
+    const match = time.match(/^(\d+)([mhd])$/);
+    if (!match) {
+      throw new Error(
+        `Invalid expiration format: ${time}. Use formats like '15m', '7d', etc.`,
+      );
+    }
+
+    const [, value, unit] = match;
+    const num = parseInt(value, 10);
+
+    switch (unit) {
+      case 'm':
+        return num * 60 * 1000; // minutes to ms
+      case 'h':
+        return num * 60 * 60 * 1000; // hours to ms
+      case 'd':
+        return num * 24 * 60 * 60 * 1000; // days to ms
+      default:
+        throw new Error(
+          `Unsupported time unit: ${unit}. Use 'm' for minutes, 'h' for hours, or 'd' for days.`,
+        );
+    }
+  }
 }
