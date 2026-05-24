@@ -3,8 +3,12 @@ import { asyncLocalStorage, OperationContext } from "./operation-context";
 
 @Injectable()
 export class OperationContextService {
-  getContext(): OperationContext | undefined {
-    return asyncLocalStorage.getStore();
+  getContext(): OperationContext {
+    const context = asyncLocalStorage.getStore();
+    if (!context) {
+      throw new Error("OperationContext is not available");
+    }
+    return context;
   }
 
   getTraceId(): string | undefined {

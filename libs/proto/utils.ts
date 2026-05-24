@@ -1,3 +1,5 @@
+import { Metadata } from '@grpc/grpc-js';
+import { OperationContext } from 'libs/decorators/operation-context';
 import { join } from 'path';
 
 const PROTO_ARRAY = [
@@ -21,15 +23,14 @@ export const buildProtoOptions = (): {
   };
 };
 
-export class GrpcMetaData {
-  traceId: string;
-  userId?: string;
-}
-
-export const buildMetadata = (context) => {
+export const buildMetadata = (context: OperationContext) => {
   const metaData = {
-    traceId: context.traceId || 'unknown-trace-id',
-    userId: context.userId || 'unknown-user-id',
+    traceId: context?.traceId || 'unknown-trace-id',
+    userId: context?.userId || 'unknown-user-id',
   };
-  return metaData;
+  const metadata = new Metadata();
+  Object.entries(metaData).forEach(([key, value]) => {
+    metadata.set(key, value);
+  });
+  return metadata;
 };

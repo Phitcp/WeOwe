@@ -1,12 +1,13 @@
-import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
+import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
+import { AppLogger } from 'libs/common/logger/custom-logger.service';
 import { OperationContextService } from 'libs/decorators/operation-context.service';
 
 export const traceIdHeaderKey = 'x-trace-id';
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
   constructor(
-    private readonly logger: Logger,
+    private readonly appLogger: AppLogger,
     private readonly operationContextService: OperationContextService,
   ) {}
   use(req: Request, res: Response, next: NextFunction) {
@@ -14,11 +15,10 @@ export class LoggerMiddleware implements NestMiddleware {
     if (!traceId) {
       req.headers[traceIdHeaderKey] = traceId;
     }
-    this.logger.log(
-      `[${req.method}] - ${req.originalUrl} - Trace ID: ${traceId}`,
-    );
-    this.operationContextService.run({ traceId: traceId as string }, () =>
-      next(),
-    );
+    this.operationContextService.run({ traceId: traceId as string }, () => {
+      this.appLogger.addLogContext(`Gateway || ${traceId}`);
+      this.appLogger.log(`[${req.method}] - ${req.originalUrl}`);
+      return next();
+    });
   }
 }

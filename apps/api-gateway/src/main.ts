@@ -11,7 +11,7 @@ async function bootstrap() {
     forbidNonWhitelisted: true, // Throws error if non-whitelisted properties are present
     transform: true, // Automatically transforms payloads to DTO instances
   }));
-  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(app.get(HttpExceptionFilter));
   const configService = app.get(AppConfigService);
   const port = configService.port;
   await app.listen(port);

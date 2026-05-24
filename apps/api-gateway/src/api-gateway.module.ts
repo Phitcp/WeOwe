@@ -1,4 +1,4 @@
-import { Logger, MiddlewareConsumer, Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import {
   ApiGatewayController,
   ApiGatewayControllerBaseDependencies,
@@ -11,17 +11,21 @@ import { LoggerMiddleware } from 'libs/middlewares/request-log.middleware';
 import { WeOweGrpcClientModule } from './grpc-client.module';
 import { OperationContextService } from 'libs/decorators/operation-context.service';
 
+import { HttpExceptionFilter } from 'libs/filters';
+import { LoggerModule } from 'libs/common/logger';
+
 @Module({
-  imports: [UtilModule, WeOweGrpcClientModule, AppConfigModule, AuthModule],
+  imports: [UtilModule, WeOweGrpcClientModule, AppConfigModule, AuthModule, LoggerModule],
   controllers: [ApiGatewayController],
   providers: [
     ApiGatewayService,
     ApiGatewayControllerBaseDependencies,
-    Logger,
     OperationContextService,
+    HttpExceptionFilter,
   ],
   exports: [ApiGatewayService],
 })
+
 export class ApiGatewayModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes('*');

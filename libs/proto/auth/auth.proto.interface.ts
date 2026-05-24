@@ -1,10 +1,10 @@
 import { Observable } from 'rxjs';
-import { GrpcMetaData } from '../utils';
+import { Metadata } from '@grpc/grpc-js';
 
 export interface AuthServiceClient {
   register(
     data: GrpcRegisterRequest,
-    metaData: GrpcMetaData,
+    metaData: Metadata,
   ): Observable<GrpcRegisterResponse>;
 }
 

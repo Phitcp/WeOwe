@@ -5,7 +5,7 @@ import { UtilModule } from '@app/util';
 import { AppConfigModule } from './config/config.module';
 import { DatabaseModule } from '../../../libs/database/mongo.module';
 import { AuthModule } from './auth/auth.module';
-import { GrpcContextInterceptor } from 'libs/interceptors/grpc-context.interceptor';
+import { LoggerModule } from 'libs/common/logger';
 import { OperationContextService } from 'libs/decorators/operation-context.service';
 
 @Module({
@@ -13,7 +13,8 @@ import { OperationContextService } from 'libs/decorators/operation-context.servi
     UtilModule,
     AppConfigModule,
     DatabaseModule,
-    AuthModule
+    AuthModule,
+    LoggerModule,
   ],
   controllers: [AppController],
   providers: [

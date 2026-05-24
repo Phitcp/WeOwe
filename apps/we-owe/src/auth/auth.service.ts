@@ -10,24 +10,31 @@ import {
 import * as bcrypt from 'bcrypt';
 import { JwtService } from 'libs/common/jwt';
 import { AppConfigService } from '../config/config.service';
+import { OperationContextService } from 'libs/decorators/operation-context.service';
+import { AppLogger } from 'libs/common/logger/custom-logger.service';
 
 @Injectable()
 export class AuthBaseServiceDependencies {
   constructor(
+    protected appLogger: AppLogger,
+    protected operationContext: OperationContextService,
     protected userRepository: UserRepository,
     protected refreshTokenRepository: RefreshTokenRepository,
     protected utilService: UtilService,
     protected jwtService: JwtService,
     protected appConfig: AppConfigService,
-  ) {}
+  ) {
+  }
 }
 
 @Injectable()
 export class AuthService extends AuthBaseServiceDependencies {
   async register(payload: GrpcRegisterRequest): Promise<GrpcRegisterResponse> {
+    this.appLogger.addLogContext('AuthService.register');
     const { email, password } = payload;
     const isExisted = await this.userRepository.count({ email: payload.email });
     if (isExisted) {
+      this.appLogger.warn(`Registration attempt with existing email: ${email}`);
       throw new RpcException({
         code: 6,
         message: 'User already exists',
@@ -56,6 +63,7 @@ export class AuthService extends AuthBaseServiceDependencies {
         this.appConfig.jwt.refreshTokenExpiration / msInDay || 7,
       ),
     });
+    this.appLogger.log('Register success for user: ' + newUser.id);
 
     return {
       email: newUser.email,

@@ -4,6 +4,7 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { buildProtoOptions } from 'libs/proto/utils';
 import { ConfigService } from '@nestjs/config';
 import { OperationContextService } from 'libs/decorators/operation-context.service';
+import { AppLogger } from 'libs/common/logger/custom-logger.service';
 import { GrpcContextInterceptor } from 'libs/interceptors/grpc-context.interceptor';
 
 async function bootstrap() {
@@ -24,7 +25,10 @@ async function bootstrap() {
   );
 
   app.useGlobalInterceptors(
-    new GrpcContextInterceptor(app.get(OperationContextService)),
+    new GrpcContextInterceptor(
+      app.get(OperationContextService),
+      app.get(AppLogger),
+    ),
   );
   await app.listen();
   console.log(`we-owe gRPC service listening on ${port}`);

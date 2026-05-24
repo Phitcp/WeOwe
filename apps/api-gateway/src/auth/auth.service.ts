@@ -23,7 +23,7 @@ export class AuthServiceBaseDependencies implements OnModuleInit {
 export class AuthService extends AuthServiceBaseDependencies {
   async register(user: RegisterDto) {
     const context = this.operationContextService.getContext();
-    const metaData = buildMetadata(context)
+    const metaData = buildMetadata(context);
     return await firstValueFrom(this.authService.register(user, metaData));
   }
 }
