@@ -12,8 +12,55 @@ message RegisterResponse {
     string password = 2;
     string accessToken = 3;
     string refreshToken = 4;
+    string familyId = 5;
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+    string email = 1;
+    string accessToken = 2;
+    string refreshToken = 3;
+    string familyId = 4;
+}
+
+message LogoutRequest {
+  string userId = 1;
+  string familyId = 2;
+}
+
+message LogoutResponse {
+    bool success = 1;
+}
+
+message RotateTokenRequest {
+  string userId = 1;
+  string refreshToken = 2;
+  string familyId = 3;
+}
+
+message RotateTokenResponse {
+    string accessToken = 1;
+    string refreshToken = 2;
+}
+
+message ChangePasswordRequest {
+  string userId = 1;
+  string newPassword = 2;
+  bool isForceLogout = 3;
+}
+
+message ChangePasswordResponse {
+    bool success = 1;
 }
 
 service Auth {
   rpc Register(RegisterRequest) returns (RegisterResponse);
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc Logout(LogoutRequest) returns (LogoutResponse);
+  rpc RotateToken(RotateTokenRequest) returns (RotateTokenResponse);
+  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
 }

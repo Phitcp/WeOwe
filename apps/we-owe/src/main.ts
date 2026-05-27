@@ -5,7 +5,7 @@ import { buildProtoOptions } from 'libs/proto/utils';
 import { ConfigService } from '@nestjs/config';
 import { OperationContextService } from 'libs/decorators/operation-context.service';
 import { AppLogger } from 'libs/common/logger/custom-logger.service';
-import { GrpcContextInterceptor } from 'libs/interceptors/grpc-context.interceptor';
+import { GrpcContextInterceptor } from 'libs/interceptors/grpc/grpc-context.interceptor';
 
 async function bootstrap() {
   const packageRoot = buildProtoOptions();

@@ -6,9 +6,10 @@ import {
 } from './auth.controller';
 import { WeOweGrpcClientModule } from '../grpc-client.module';
 import { OperationContextService } from 'libs/decorators/operation-context.service';
+import { JwtModule } from 'libs/common/jwt';
 
 @Module({
-  imports: [WeOweGrpcClientModule],
+  imports: [WeOweGrpcClientModule, JwtModule],
   controllers: [AuthController],
   providers: [
     AuthControllerBaseDependencies,

@@ -15,8 +15,7 @@ import { UserRepository } from './schemas/user/user.repository';
 import { UtilModule } from '@app/util';
 import { JwtModule } from 'libs/common/jwt';
 import { AppConfigModule } from '../config/config.module';
-import { OperationContextService } from 'libs/decorators/operation-context.service';
-import { AppLogger } from 'libs/common/logger/custom-logger.service';
+import { LoggerModule } from 'libs/common/logger';
 
 @Module({
   imports: [
@@ -32,16 +31,15 @@ import { AppLogger } from 'libs/common/logger/custom-logger.service';
     ]),
     UtilModule,
     JwtModule,
-    AppConfigModule
+    AppConfigModule,
+    LoggerModule,
   ],
   providers: [
-    OperationContextService,
     AuthService,
     AuthBaseServiceDependencies,
     AuthControllerBaseDependencies,
     RefreshTokenRepository,
     UserRepository,
-    AppLogger,
   ],
   controllers: [AuthController],
 })

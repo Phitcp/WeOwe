@@ -33,4 +33,12 @@ export abstract class BaseRepository<T extends Document> {
   async count(filter: QueryFilter<T>): Promise<number> {
     return this.model.countDocuments(filter).exec();
   }
+
+  async updateMany(filter: QueryFilter<T>, data: UpdateQuery<T>): Promise<{ matchedCount: number; modifiedCount: number }> {
+    const result = await this.model.updateMany(filter, data).exec();
+    return {
+      matchedCount: result.matchedCount,
+      modifiedCount: result.modifiedCount,
+    };
+  }
 }

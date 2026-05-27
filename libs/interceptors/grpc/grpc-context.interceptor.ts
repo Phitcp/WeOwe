@@ -2,7 +2,7 @@ import { Metadata } from '@grpc/grpc-js';
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { OperationContextService } from 'libs/decorators/operation-context.service'; 
-import { AppLogger } from 'libs/common/logger/custom-logger.service';
+import { AppLogger } from 'libs/common/logger';
 import { randomUUID } from 'crypto';
 
 @Injectable()
@@ -20,12 +20,19 @@ export class GrpcContextInterceptor implements NestInterceptor {
 
     return new Observable(observer => {
       this.operationContext.run({ traceId }, () => {
-        this.appLogger.addLogContext(`Core: ${traceId}`);
+        this.appLogger.pushContext(`Core: ${traceId}`);
         this.appLogger.log(`gRPC: ${method}`);
+        
         next.handle().subscribe({
           next: val => observer.next(val),
-          error: err => observer.error(err),
-          complete: () => observer.complete(),
+          error: err => {
+            this.appLogger.popContext();
+            observer.error(err);
+          },
+          complete: () => {
+            this.appLogger.popContext();
+            observer.complete();
+          },
         });
       });
     });

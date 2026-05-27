@@ -13,6 +13,7 @@ import { OperationContextService } from 'libs/decorators/operation-context.servi
 
 import { HttpExceptionFilter } from 'libs/filters';
 import { LoggerModule } from 'libs/common/logger';
+import { ExtractTokenInterceptor } from 'libs/interceptors/http/extract-token.interceptor';
 
 @Module({
   imports: [UtilModule, WeOweGrpcClientModule, AppConfigModule, AuthModule, LoggerModule],
@@ -22,6 +23,7 @@ import { LoggerModule } from 'libs/common/logger';
     ApiGatewayControllerBaseDependencies,
     OperationContextService,
     HttpExceptionFilter,
+    ExtractTokenInterceptor,
   ],
   exports: [ApiGatewayService],
 })

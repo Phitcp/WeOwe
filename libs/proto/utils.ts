@@ -26,7 +26,7 @@ export const buildProtoOptions = (): {
 export const buildMetadata = (context: OperationContext) => {
   const metaData = {
     traceId: context?.traceId || 'unknown-trace-id',
-    userId: context?.userId || 'unknown-user-id',
+    userId: context?.user?.userId || 'unknown-user-id',
   };
   const metadata = new Metadata();
   Object.entries(metaData).forEach(([key, value]) => {

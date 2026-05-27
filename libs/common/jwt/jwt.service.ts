@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService as NestJwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import crypto from 'crypto';
+import crypto, { createHash } from 'crypto';
 @Injectable()
 export class JwtService {
   constructor(
@@ -34,9 +34,9 @@ export class JwtService {
     return { accessToken, refreshToken };
   }
 
-  async hashToken(token: string): Promise<string> {
-    const salt = await bcrypt.genSalt(10);
-    return bcrypt.hash(token, salt);
+  hashToken(token: string): string {
+    const tokenHash = createHash('sha256').update(token).digest('hex');
+    return tokenHash;
   }
 
   generateFamilyId(): string {

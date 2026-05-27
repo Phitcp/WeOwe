@@ -12,4 +12,5 @@ export class RefreshTokenRepository extends BaseRepository<RefreshTokenDocument>
   ) {
     super(model);
   }
+
 }
